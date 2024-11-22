@@ -162,6 +162,7 @@ cython_debug/
 #.idea/
 
 
-# My additions to the default GitHub .gitignore
-bin/
-include/
+
+#################################################
+# My additions to the default GitHub .gitignore #
+#################################################

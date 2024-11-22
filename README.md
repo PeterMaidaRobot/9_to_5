@@ -1,6 +1,19 @@
 # 9_to_5
 Game Jam 2024 has a "secret" theme. This is an office mystery game.
 
+# How to Run
+
+```
+source .venv/bin/activate
+pip install -r requirements.txt
+python main.py
+```
+
+# To close the venv run
+```
+deactivate
+```
+
 
 
 ## Credits
