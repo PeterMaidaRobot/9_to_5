@@ -4,12 +4,13 @@ Game Jam 2024 has a "secret" theme. This is an office mystery game.
 # How to Run
 
 ```
+python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python main.py
 ```
 
-# To close the venv run
+# To close the venv once done
 ```
 deactivate
 ```
