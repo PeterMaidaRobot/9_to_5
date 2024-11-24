@@ -1,7 +1,7 @@
 import pygame
 import constants
 
-MOVE_SPEED = 2
+MOVE_SPEED = 4
 
 class Player():
 
@@ -28,6 +28,9 @@ class Player():
                               104, # top of character head on sheet position
                               all_images.get_rect().width,
                               all_images.get_rect().height))
+        self.image = pygame.transform.scale2x(self.image)
+        self.height *= 2
+        self.width *= 2
 
     def update_position(self):
 

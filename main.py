@@ -9,7 +9,8 @@ def play_game():
 
     pygame.init()
 
-    screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT),
+                                     pygame.FULLSCREEN | pygame.SCALED)
 
     pygame.display.set_caption("9 to 5")
 
