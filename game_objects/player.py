@@ -21,16 +21,21 @@ class Player():
 
         all_images = pygame.image.load("graphics/PixelOfficeAssets.png").convert_alpha()
         # Create a smaller blank surface, and blit the part we want onto it.
-        self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        self.image.blit(source=all_images,
-                        dest=(0, 0),
-                        area=(2, # left of character on sheet position
-                              104, # top of character head on sheet position
-                              all_images.get_rect().width,
-                              all_images.get_rect().height))
-        self.image = pygame.transform.scale2x(self.image)
+        self.right_image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        self.right_image.blit(source=all_images,
+                              dest=(0, 0),
+                              area=(2, # left of character on sheet position
+                                    104, # top of character head on sheet position
+                                    all_images.get_rect().width,
+                                    all_images.get_rect().height))
+        self.right_image = pygame.transform.scale2x(self.right_image)
+        self.left_image = pygame.transform.flip(surface=self.right_image,
+                                                flip_x=True,
+                                                flip_y=False)
         self.height *= 2
         self.width *= 2
+
+        self.direction = constants.Directions.LEFT
 
     def update_position(self):
 
@@ -55,11 +60,18 @@ class Player():
         self.pos.y = max(0, self.pos.y)
         self.pos.y = min(constants.SCREEN_HEIGHT - self.height, self.pos.y)
 
+        # Flip the animating image if we flip directions. UP and DOWN don't change the direction
+        if move_vector.x < 0:
+            self.direction = constants.Directions.LEFT
+        if move_vector.x > 0:
+            self.direction = constants.Directions.RIGHT
 
     def update(self):
         self.update_position()
 
-
     def draw(self, screen):
         # Update the draw position to be the float precision position value
-        screen.blit(self.image, self.pos)
+        if self.direction == constants.Directions.LEFT:
+            screen.blit(self.left_image, self.pos)
+        else:
+            screen.blit(self.right_image, self.pos)
