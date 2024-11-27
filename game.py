@@ -1,5 +1,8 @@
-from game_objects.player import Player
 import pygame
+
+from game_objects.player import Player
+from paths import Paths
+import debug
 
 
 class Game():
@@ -7,6 +10,7 @@ class Game():
     def __init__(self, screen):
         self.screen = screen
         self.player = Player()
+        self.paths = Paths()
 
         #self.office_image = pygame.image.load("graphics/PixelOffice.png").convert_alpha()
         self.office_background = pygame.image.load("graphics/office_background.png").convert_alpha()
@@ -92,3 +96,6 @@ class Game():
         self.player.draw(self.screen)
 
         self.draw_clock()
+
+        if debug.SHOW_PATHS:
+            self.paths.draw(self.screen)

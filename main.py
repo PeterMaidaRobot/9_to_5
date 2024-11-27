@@ -8,6 +8,7 @@ import constants
 def play_game():
 
     pygame.init()
+    pygame.font.init()
 
     screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT),
                                      pygame.FULLSCREEN | pygame.SCALED)
