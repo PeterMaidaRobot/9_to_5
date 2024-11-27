@@ -1,7 +1,9 @@
 import pygame
 
 from game_objects.player import Player
-from paths import Paths
+from game_objects.worker import Worker
+from paths import Destinations
+import paths
 import debug
 
 
@@ -10,7 +12,8 @@ class Game():
     def __init__(self, screen):
         self.screen = screen
         self.player = Player()
-        self.paths = Paths()
+
+        self.susan = Worker()
 
         #self.office_image = pygame.image.load("graphics/PixelOffice.png").convert_alpha()
         self.office_background = pygame.image.load("graphics/office_background.png").convert_alpha()
@@ -55,10 +58,21 @@ class Game():
                 if self.time["hour"] == 13:
                     self.time["hour"] = 1
 
+    def update_schedule(self):
+        # All events require 0 seconds (it only happens once per frame)
+        if self.time["second"] == 0:
+            if self.time["hour"] == 7 and self.time["minute"] == 0:
+                self.susan.move_to(Destinations.ENTRANCE)
+
     def update(self):
+        self.update_schedule()
+
         self.player.update()
 
         self.update_time()
+
+        self.susan.update()
+
 
     def draw_clock(self):
 
@@ -97,5 +111,7 @@ class Game():
 
         self.draw_clock()
 
+        self.susan.draw(self.screen)
+
         if debug.SHOW_PATHS:
-            self.paths.draw(self.screen)
+            paths.draw(self.screen)

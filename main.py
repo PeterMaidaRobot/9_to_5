@@ -1,7 +1,7 @@
 import pygame
 from game import Game
 import constants
-
+import paths
 
 
 
@@ -18,6 +18,8 @@ def play_game():
     clock = pygame.time.Clock()
 
     game = Game(screen)
+
+    paths.init_paths()
 
     while True:
 
