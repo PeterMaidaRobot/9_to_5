@@ -1,4 +1,5 @@
 import pygame
+import debug
 
 
 class Node:
@@ -22,7 +23,7 @@ class Node:
                            10)
 
         # Draw node name
-        new_font = pygame.font.SysFont("monospace", 30)
+        new_font = pygame.font.SysFont(pygame.font.get_default_font(), 18)
         text = new_font.render(self.name, False, (0, 0, 0))
         surface.blit(text, (self.x, self.y))
 
@@ -33,7 +34,8 @@ class Node:
                              (self.x, self.y),
                              (neighbor.x, neighbor.y),
                              5)
-            # Draw weight
-            text = new_font.render(str(self.weight_dict[neighbor]), False, (0, 0, 0))
-            surface.blit(text, ((self.x+neighbor.x) / 2, (self.y+neighbor.y) / 2))
+            if debug.SHOW_PATH_WEIGHTS:
+                # Draw weight
+                text = new_font.render(str(self.weight_dict[neighbor]), False, (0, 0, 0))
+                surface.blit(text, ((self.x+neighbor.x) / 2, (self.y+neighbor.y) / 2))
 

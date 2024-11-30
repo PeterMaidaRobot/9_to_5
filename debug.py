@@ -1,2 +1,3 @@
 
-SHOW_PATHS = True
+SHOW_PATHS = False
+SHOW_PATH_WEIGHTS = False

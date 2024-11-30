@@ -44,6 +44,8 @@ class Worker():
 
     def move_to(self, target):
         self.path_to_follow = paths.get_path(self.node, target)
+        for node in self.path_to_follow:
+            print(f"path to follow: {node.name}")
 
     def update(self):
         # Check if we still have movement left in this path to follow
@@ -54,11 +56,14 @@ class Worker():
                 self.node = self.path_to_follow[0]
                 self.path_to_follow = self.path_to_follow[1:]
 
+
             # If we still haven't reached our destination, update the position
             if len(self.path_to_follow) > 0:
+                # Create a +1 x +1 y vector, and normalize it if we are moving in both directions.
                 velocity = pygame.Vector2(self.path_to_follow[0].x - self.pos.x,
                                           self.path_to_follow[0].y - self.pos.y)
-                velocity = velocity.normalize()
+                if velocity.magnitude() > 1:
+                    velocity = velocity.normalize()
                 self.pos += velocity
 
                 # Flip the animating image if we flip directions. UP and DOWN don't change the direction
