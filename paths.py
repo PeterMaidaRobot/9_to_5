@@ -1,8 +1,8 @@
-from enum import Enum
+from enum import StrEnum
 from node import Node
 
 
-class Destinations(Enum):
+class Destinations(StrEnum):
     ENTRANCE = "ENTRANCE"
     SECRETARY = "SECRETARY"
     LARGE_CONF = "LARGE CONF"
@@ -80,11 +80,18 @@ class Destinations(Enum):
     HALL_CC = "HALL CC"
     HALL_DD = "HALL DD"
 
-
+# Nodes is used to easily set up the grid with node objects
 nodes = []
+
+# matrix is used as the lower level interpration of the nodemap
+matrix = []
+
 DESK_TO_HALL_DIST = 45
 HALL_TO_HALL_DIST = 55
 JUNCTION_WIDTH_DIST = 210
+
+large_num = 900000
+
 
 def init_paths():
 
@@ -437,7 +444,9 @@ def init_paths():
     nodes.append(entrance)
 
     verify_bidrectional_neigbors()
-    generate_weights()
+    convert_to_matrix()
+    generate_all_weights()
+    #print_nodes()
 
 
 def verify_bidrectional_neigbors():
@@ -447,14 +456,117 @@ def verify_bidrectional_neigbors():
                 print(f"Node {node.name} missing in neighbors for {neighbor1.name}")
 
 
-def generate_weights():
+def get_index_from_node(node):
+    for index, destination in enumerate(Destinations):
+        if destination.value == node.name:
+            return index
+    return -1
+
+
+def convert_to_matrix():
+
+    # Create the empty matrix with large values
+    for destination in Destinations:
+        matrix.append([large_num] * len(Destinations))
+
+    # Update the grid with possible neighbors
+    for source_node in nodes:
+        source_index = get_index_from_node(source_node)
+        matrix[source_index][source_index] = 0
+        for dest_node, weight in source_node.weight_dict.items():
+            dest_index = get_index_from_node(dest_node)
+            matrix[source_index][dest_index] = weight
+
+    # Print out the matrix
+    for index, row in enumerate(matrix):
+        print(list(Destinations).index(Destinations.ENTRANCE))
+        print(f"{list(Destinations)[index].name} {row}\n")
+
+
+def get_min_dist_index(dist_list, shortest_path_found):
+    min_dist = large_num
+    min_index = -1
+    for index, dist in enumerate(dist_list):
+        if dist < min_dist and shortest_path_found[index]:
+            min_dist = dist
+            min_index = index
+    return min_index
+
+
+def generate_all_weights():
+    '''
+    Unfortunately this is NOT optimized and can be more efficient!!!
+    It's pretty much dijkstra's for each node for the entire graph
+    '''
     # TODO... do I have to do Dijstka's for each node.... would take a long time.
-    pass
+
+    for source_node in nodes:
+        source_index = get_index_from_node(source_node)
+
+        shortest_path_found = [False] * len(nodes)
+
+        closest_node_index = get_min_dist_index(matrix[source_index], shortest_path_found)
+        shortest_path_found[closest_node_index] = True
+
+        for dest_index in range(len(nodes)):
+            pass
+
+# TODO u is closest_node_index, v is dest_index
+        # Update dist value of the adjacent vertices
+        # of the picked vertex only if the current
+        # distance is greater than new distance and
+        # the vertex in not in the shortest path tree
+        for v in range(self.V):
+            if (self.graph[u][v] > 0 and
+                    sptSet[v] == False and
+                    dist[v] > dist[u] + self.graph[u][v]):
+                dist[v] = dist[u] + self.graph[u][v]
+
+
+        # num_unresolved_nodes = len(nodes)
+        #
+        # # Add the root source_node first
+        # source_node.weight_dict[source_node] = 0
+        # shortest_path_found[source_index] = True
+        # num_unresolved_nodes -= 1
+        #
+        # # Find the minimum spanning tree for every node for this source_node
+        # for node in nodes:
+        #
+        #     # Update all of the distances from neighbors
+        #
+        #     # Add the shortest distance to the minimum spanning tree
+        #
+        #     num_unresolved_nodes -= 1
+        #
+        # break
+
+    '''
+    Fake Dijkstra's:
+    
+    Loop through each node.
+    For each node, find the shortest neighbor of the neighbors to still look for in the weight dictionary.
+    This is removing from a stack of neighbors that are still undetermined.
+    Then find all of the neighbors from that shortest node. If any are closer than the current one we have, then that one gets added.
+    '''
+
+
+def print_nodes():
+    for node in nodes:
+        print(f"{node.name} neighbors: ", end="")
+        for neighbor in node.neighbors:
+            print(f"{neighbor.name} ", end="")
+        print("")
+        print("Weight Dict: ", end="")
+        for neighbor, weight in node.weight_dict.items():
+            print(f"{neighbor.name}={weight} ", end="")
+        print("\n********************\n")
 
 
 def add_edges(node, neighbors):
     for neighbor in neighbors:
         node.add_edge(neighbor)
+        node.weight_dict[neighbor] = abs(node.x - neighbor.x) + abs(node.y - neighbor.y)
 
 
 def get_path(source, destination):
